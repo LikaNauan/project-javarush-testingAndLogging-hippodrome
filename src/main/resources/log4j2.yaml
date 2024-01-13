@@ -1,0 +1,39 @@
+Configuration:
+  Status: warn
+  name: Default
+  Properties:
+    Property:
+      - name: baseDir
+        value: "log"
+      - name: fileName
+        value: "hippodrome.log"
+      - name: pattern
+        value: "%d{dd-MM-yy HH:mm:ss.SSS} %-5level %-15c{1} - %msg%n"
+      - name: logLevel
+        value: "all"
+  Appenders:
+    RollingFile:
+      name: FileAppender
+      fileName: ${baseDir}/${fileName}
+      filePattern: ${baseDir}/$${date:yyyy-MM}/hippodrome.%d{yyyy-MM-dd}-%i.log
+      PatternLayout:
+        Pattern: ${pattern}
+      Policies:
+        OnStartupTriggeringPolicy:
+        TimeBasedTriggeringPolicy:
+        SizeBasedTriggeringPolicy:
+          size: 20 MB
+      DefaultRolloverStrategy:
+        Delete:
+          basePath: ${baseDir}
+          maxDepth: 2
+          IfFileName:
+            glob: "*/hippodrome.*.log"
+          IfLastModified:
+            age: P7D
+  Loggers:
+    Root:
+      level: ${logLevel}
+      additivity: false
+      AppenderRef:
+        ref: FileAppender
